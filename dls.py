@@ -6,18 +6,20 @@ class inputs(pygame.sprite.Sprite):
     def __init__(self,x,y,width=113,height=75) -> None:
         super().__init__()
         self.image = pygame.image.load("imgs/offinput.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (width, height)) 
+        self.image = pygame.transform.scale(self.image, (width, height))
+        self.img = False 
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         self.width,self.height = width,height
     def swap(self):
-        if self.image == pygame.image.load("imgs/offinput.png").convert_alpha():
+        if not self.img:
             self.image = pygame.image.load("imgs/oninput.png").convert_alpha()
             self.image = pygame.transform.scale(self.image, (self.width, self.height))
         else:
-            self.image = pygame.image.load("imgs/oninput.png").convert_alpha()
+            self.image = pygame.image.load("imgs/offinput.png").convert_alpha()
             self.image = pygame.transform.scale(self.image, (self.width, self.height))
+        self.img = not self.img
             
 
 DIM = (1000,750)
@@ -41,7 +43,7 @@ while running:
             clicked_sprites = [s for s in inputsgroup if s.rect.collidepoint(mousepos)]
             for i in clicked_sprites:
                 i.swap()
-            if mousepos[0] < 66:
+            if mousepos[0] < 66 and len(clicked_sprites) == 0:
                 inputsdict[id] = inputs(10,mousepos[1] - 75/2,70,50)
                 inputsgroup.add(inputsdict[id])
     pygame.display.flip()
